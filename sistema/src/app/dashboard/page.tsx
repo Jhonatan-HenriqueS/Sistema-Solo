@@ -12,8 +12,8 @@ export const metadata: Metadata = {
 export default function DashboardPage() {
   return (
     <div className="min-h-svh bg-[#f6f7f9]">
-      <Sidebar />
-      <MobileTopbar />
+      <Sidebar pagina="dashboard" />
+      <MobileTopbar pagina="dashboard" />
 
       <main className="px-4 py-8 md:px-8 lg:ml-[260px] lg:px-12 lg:py-10 2xl:px-20">
         <div>

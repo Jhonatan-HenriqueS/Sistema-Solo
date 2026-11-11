@@ -5,8 +5,13 @@ import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/s
 import { Logo } from "@/components/brand/primitives";
 import { SITE_URL } from "@/lib/config";
 
-/** Conteúdo da barra lateral. Só "Dashboard" tem rota; os outros itens são visuais. */
-function SidebarContent() {
+type Pagina = "dashboard" | "leituras";
+
+const ativo = "flex items-center gap-3 rounded-xl bg-blue-soft px-3 py-2.5 font-medium text-blue";
+const inativo = "flex items-center gap-3 rounded-xl px-3 py-2.5 text-ink-soft hover:bg-smoke";
+
+/** Conteúdo da barra lateral. "Dashboard" e "Leituras" têm rota; os outros itens são visuais. */
+function SidebarContent({ pagina }: { pagina: Pagina }) {
   return (
     <div className="flex h-full flex-col">
       <a href="/dashboard" aria-label="Agro+ dashboard" className="px-2">
@@ -21,18 +26,22 @@ function SidebarContent() {
           <li>
             <a
               href="/dashboard"
-              aria-current="page"
-              className="flex items-center gap-3 rounded-xl bg-blue-soft px-3 py-2.5 font-medium text-blue"
+              aria-current={pagina === "dashboard" ? "page" : undefined}
+              className={pagina === "dashboard" ? ativo : inativo}
             >
               <LayoutDashboard className="size-[18px]" />
               Dashboard
             </a>
           </li>
           <li>
-            <span className="flex cursor-default items-center gap-3 rounded-xl px-3 py-2.5 text-ink-soft hover:bg-smoke">
+            <a
+              href="/dashboard/leituras"
+              aria-current={pagina === "leituras" ? "page" : undefined}
+              className={pagina === "leituras" ? ativo : inativo}
+            >
               <Activity className="size-[18px]" />
               Leituras
-            </span>
+            </a>
           </li>
           <li>
             <span className="flex cursor-default items-center gap-3 rounded-xl px-3 py-2.5 text-ink-soft hover:bg-smoke">
@@ -71,15 +80,15 @@ function SidebarContent() {
   );
 }
 
-export function Sidebar() {
+export function Sidebar({ pagina }: { pagina: Pagina }) {
   return (
     <aside className="fixed inset-y-0 left-0 z-30 hidden w-[260px] border-r border-black/5 bg-white p-5 lg:block">
-      <SidebarContent />
+      <SidebarContent pagina={pagina} />
     </aside>
   );
 }
 
-export function MobileTopbar() {
+export function MobileTopbar({ pagina }: { pagina: Pagina }) {
   return (
     <header className="sticky top-0 z-30 flex items-center gap-3 border-b border-black/5 bg-white/90 px-4 py-3 backdrop-blur lg:hidden">
       <Sheet>
@@ -91,7 +100,7 @@ export function MobileTopbar() {
         </SheetTrigger>
         <SheetContent side="left" className="w-[280px] p-5">
           <SheetTitle className="sr-only">Menu</SheetTitle>
-          <SidebarContent />
+          <SidebarContent pagina={pagina} />
         </SheetContent>
       </Sheet>
       <Logo />
