@@ -129,6 +129,16 @@ export function FazendaModal({
                   sizes="480px"
                   className="object-cover"
                 />
+                <div className="absolute inset-0 grid place-items-center bg-black/20">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => arquivoRef.current?.click()}
+                    className="h-10 rounded-full border-0 bg-white/90 px-4 shadow-sm backdrop-blur hover:bg-white"
+                  >
+                    <ImageIcon /> Editar imagem
+                  </Button>
+                </div>
               </div>
               <input
                 ref={arquivoRef}
@@ -137,14 +147,6 @@ export function FazendaModal({
                 onChange={escolherImagem}
                 className="hidden"
               />
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => arquivoRef.current?.click()}
-                className="mt-3 h-10 rounded-full px-4"
-              >
-                <ImageIcon /> Editar imagem
-              </Button>
             </div>
 
             <div className="space-y-2">
