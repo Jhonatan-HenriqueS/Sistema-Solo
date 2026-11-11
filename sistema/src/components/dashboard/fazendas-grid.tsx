@@ -2,24 +2,23 @@
 
 // Fazendas de demonstração. Os valores ficam escritos direto no JSX; não há banco nem cálculo.
 import Image from "next/image";
-import { ArrowRight, Clock, Droplets, ImageIcon, MapPin, Maximize2, Pencil } from "lucide-react";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { useState } from "react";
+import { ArrowRight, Clock, Droplets, MapPin, Maximize2, Pencil, Plus } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { Selo, type Nivel } from "./leituras-tabela";
+import { FazendaModal, type DadosFazenda } from "./fazenda-modal";
 
-/** Card de uma fazenda. "Editar" e "Alterar imagem" são só visuais. */
+/** Card de uma fazenda. O lápis abre o modal de edição. */
 function Fazenda(p: {
   nome: string;
-  local: string;
+  cidade: string;
+  uf: string;
   area: string;
   talhoes: string;
   nivel: Nivel;
   umidade: string;
   ultimaLeitura: string;
+  onEditar: (dados: DadosFazenda) => void;
 }) {
   return (
     <article className="overflow-hidden rounded-[24px] bg-white ring-1 ring-black/5 transition-[scale,box-shadow] duration-300 hover:scale-[1.01] hover:shadow-[0_20px_40px_-20px_rgba(16,24,40,0.25)]">
@@ -32,22 +31,16 @@ function Fazenda(p: {
           className="object-cover"
         />
         <div className="absolute top-3 right-3">
-          <DropdownMenu>
-            <DropdownMenuTrigger
-              aria-label={`Editar ${p.nome}`}
-              className="grid size-9 place-items-center rounded-full bg-white/90 text-ink shadow-sm backdrop-blur transition-colors hover:bg-white"
-            >
-              <Pencil className="size-4" />
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-44 rounded-xl p-1.5">
-              <DropdownMenuItem className="rounded-lg px-2.5 py-2">
-                <Pencil /> Editar fazenda
-              </DropdownMenuItem>
-              <DropdownMenuItem className="rounded-lg px-2.5 py-2">
-                <ImageIcon /> Alterar imagem
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <Button
+            type="button"
+            size="icon"
+            variant="outline"
+            aria-label={`Editar ${p.nome}`}
+            onClick={() => p.onEditar({ nome: p.nome, cidade: p.cidade, uf: p.uf, area: p.area })}
+            className="size-9 rounded-full border-0 bg-white/90 shadow-sm backdrop-blur hover:bg-white"
+          >
+            <Pencil />
+          </Button>
         </div>
       </div>
 
@@ -56,7 +49,7 @@ function Fazenda(p: {
           <div>
             <h2 className="font-display text-[28px] leading-tight">{p.nome}</h2>
             <p className="mt-1 flex items-center gap-1.5 text-[13px] text-ink-soft">
-              <MapPin className="size-3.5" /> {p.local}
+              <MapPin className="size-3.5" /> {p.cidade}/{p.uf}
             </p>
           </div>
           <Selo nivel={p.nivel} />
@@ -66,7 +59,7 @@ function Fazenda(p: {
           <div>
             <dt className="text-[11px] font-semibold tracking-[0.06em] text-ink-soft/70 uppercase">Área</dt>
             <dd className="mt-1 flex items-center gap-1.5 text-[15px] font-medium">
-              <Maximize2 className="size-3.5 text-blue" /> {p.area}
+              <Maximize2 className="size-3.5 text-blue" /> {p.area} ha
             </dd>
           </div>
           <div>
@@ -98,16 +91,56 @@ function Fazenda(p: {
   );
 }
 
-export function FazendasGrid() {
+const vazia: DadosFazenda = { nome: "", cidade: "", uf: "", area: "" };
+
+/** Topo da página + grade de fazendas + modal. O modal abre e fecha por useState. */
+export function FazendasView() {
+  const [aberto, setAberto] = useState(false);
+  const [modo, setModo] = useState<"editar" | "criar">("criar");
+  const [dados, setDados] = useState<DadosFazenda>(vazia);
+  // Muda a cada abertura para o modal começar com os campos do zero.
+  const [chave, setChave] = useState(0);
+
+  function abrir(novoModo: "editar" | "criar", novosDados: DadosFazenda) {
+    setModo(novoModo);
+    setDados(novosDados);
+    setChave((c) => c + 1);
+    setAberto(true);
+  }
+
+  function editar(d: DadosFazenda) {
+    abrir("editar", d);
+  }
+
   return (
-    <div className="grid gap-4 lg:grid-cols-2">
-      <Fazenda nome="Fazenda Boa Vista" local="Ji-Paraná/RO" area="120 ha" talhoes="4" nivel="excelente" umidade="64%" ultimaLeitura="04/11 · 14:20" />
-      <Fazenda nome="Fazenda Santa Luzia" local="Ouro Preto do Oeste/RO" area="85 ha" talhoes="3" nivel="ideal" umidade="61%" ultimaLeitura="04/11 · 11:40" />
-      <Fazenda nome="Sítio Esperança" local="Presidente Médici/RO" area="40 ha" talhoes="2" nivel="abaixo" umidade="47%" ultimaLeitura="03/11 · 18:10" />
-      <Fazenda nome="Fazenda Primavera" local="Cacoal/RO" area="150 ha" talhoes="5" nivel="ideal" umidade="59%" ultimaLeitura="04/11 · 09:15" />
-      <Fazenda nome="Fazenda Rio Machado" local="Ji-Paraná/RO" area="210 ha" talhoes="6" nivel="excelente" umidade="66%" ultimaLeitura="04/11 · 13:05" />
-      <Fazenda nome="Sítio Bela Vista" local="Jaru/RO" area="32 ha" talhoes="2" nivel="acima" umidade="76%" ultimaLeitura="03/11 · 16:30" />
-      <Fazenda nome="Fazenda Três Irmãos" local="Rolim de Moura/RO" area="95 ha" talhoes="3" nivel="ideal" umidade="62%" ultimaLeitura="02/11 · 17:50" />
-    </div>
+    <>
+      <div className="flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
+        <div>
+          <p className="text-[11px] font-semibold tracking-[0.1em] text-blue uppercase">Plano Plus</p>
+          <h1 className="font-display mt-2 text-[44px] leading-none md:text-[52px]">Fazendas</h1>
+          <p className="mt-2 flex flex-wrap items-center gap-2 text-[15px] text-ink-soft">
+            Todas as suas propriedades em um só painel.
+            <span className="rounded-full bg-blue-soft px-2.5 py-0.5 text-[12px] font-semibold text-blue">
+              7 de 10 fazendas
+            </span>
+          </p>
+        </div>
+        <Button onClick={() => abrir("criar", vazia)} className="h-11 w-full rounded-full px-5 text-[14px] md:w-auto">
+          <Plus /> Adicionar fazenda
+        </Button>
+      </div>
+
+      <div className="mt-8 grid gap-4 lg:grid-cols-2">
+      <Fazenda nome="Fazenda Boa Vista" cidade="Ji-Paraná" uf="RO" area="120" talhoes="4" nivel="excelente" umidade="64%" onEditar={editar} ultimaLeitura="04/11 · 14:20" />
+      <Fazenda nome="Fazenda Santa Luzia" cidade="Ouro Preto do Oeste" uf="RO" area="85" talhoes="3" nivel="ideal" umidade="61%" onEditar={editar} ultimaLeitura="04/11 · 11:40" />
+      <Fazenda nome="Sítio Esperança" cidade="Presidente Médici" uf="RO" area="40" talhoes="2" nivel="abaixo" umidade="47%" onEditar={editar} ultimaLeitura="03/11 · 18:10" />
+      <Fazenda nome="Fazenda Primavera" cidade="Cacoal" uf="RO" area="150" talhoes="5" nivel="ideal" umidade="59%" onEditar={editar} ultimaLeitura="04/11 · 09:15" />
+      <Fazenda nome="Fazenda Rio Machado" cidade="Ji-Paraná" uf="RO" area="210" talhoes="6" nivel="excelente" umidade="66%" onEditar={editar} ultimaLeitura="04/11 · 13:05" />
+      <Fazenda nome="Sítio Bela Vista" cidade="Jaru" uf="RO" area="32" talhoes="2" nivel="acima" umidade="76%" onEditar={editar} ultimaLeitura="03/11 · 16:30" />
+      <Fazenda nome="Fazenda Três Irmãos" cidade="Rolim de Moura" uf="RO" area="95" talhoes="3" nivel="ideal" umidade="62%" onEditar={editar} ultimaLeitura="02/11 · 17:50" />
+      </div>
+
+      <FazendaModal key={chave} open={aberto} onOpenChange={setAberto} modo={modo} inicial={dados} />
+    </>
   );
 }
