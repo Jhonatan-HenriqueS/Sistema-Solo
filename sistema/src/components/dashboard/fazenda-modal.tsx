@@ -108,7 +108,7 @@ export function FazendaModal({
       <DialogContent className="gap-0 overflow-hidden rounded-[24px] bg-white p-0 sm:max-w-[480px]">
         <form onSubmit={enviar} noValidate>
           <DialogHeader className="px-6 pt-6">
-            <DialogTitle className="text-[24px] leading-tight font-semibold">
+            <DialogTitle className="font-sans text-[24px] leading-tight font-semibold">
               {modo === "editar" ? "Editar fazenda" : "Nova fazenda"}
             </DialogTitle>
             <DialogDescription className="text-[14px]">
