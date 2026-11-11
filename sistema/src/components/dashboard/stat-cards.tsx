@@ -14,7 +14,7 @@ export function StatCards() {
             <Sprout className="size-4 text-forest" />
           </span>
         </div>
-        <p className="font-display mt-4 text-[48px] leading-none text-leaf">Excelente</p>
+        <p className="mt-4 text-[44px] leading-none font-medium tracking-tight text-leaf">Excelente</p>
         <p className="mt-4 flex items-center gap-1.5 text-[13px] text-ink-soft">
           <CheckCircle2 className="size-3.5 text-leaf" />
           Média de N, P, K e umidade

@@ -47,7 +47,7 @@ function Fazenda(p: {
       <div className="p-5">
         <div className="flex items-start justify-between gap-3">
           <div>
-            <h2 className="font-display text-[28px] leading-tight">{p.nome}</h2>
+            <h2 className="text-[20px] leading-tight font-semibold">{p.nome}</h2>
             <p className="mt-1 flex items-center gap-1.5 text-[13px] text-ink-soft">
               <MapPin className="size-3.5" /> {p.cidade}/{p.uf}
             </p>

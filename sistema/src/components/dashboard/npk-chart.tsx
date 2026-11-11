@@ -92,7 +92,7 @@ export function NpkChart() {
           <Sparkles className="size-4" /> Nitrogênio em destaque
         </p>
         <div className="mt-2 flex items-end justify-between">
-          <span className="font-display text-[40px] leading-none">42%</span>
+          <span className="text-[36px] leading-none font-medium tracking-tight">42%</span>
           <span className="text-[13px] text-white/75">do total de NPK</span>
         </div>
       </div>
