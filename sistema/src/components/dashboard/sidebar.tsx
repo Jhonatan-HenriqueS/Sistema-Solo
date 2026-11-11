@@ -5,12 +5,12 @@ import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/s
 import { Logo } from "@/components/brand/primitives";
 import { SITE_URL } from "@/lib/config";
 
-type Pagina = "dashboard" | "leituras";
+type Pagina = "dashboard" | "leituras" | "fazendas";
 
 const ativo = "flex items-center gap-3 rounded-xl bg-blue-soft px-3 py-2.5 font-medium text-blue";
 const inativo = "flex items-center gap-3 rounded-xl px-3 py-2.5 text-ink-soft hover:bg-smoke";
 
-/** Conteúdo da barra lateral. "Dashboard" e "Leituras" têm rota; os outros itens são visuais. */
+/** Conteúdo da barra lateral. "Dashboard", "Leituras" e "Fazendas" têm rota; os outros itens são visuais. */
 function SidebarContent({ pagina }: { pagina: Pagina }) {
   return (
     <div className="flex h-full flex-col">
@@ -44,10 +44,14 @@ function SidebarContent({ pagina }: { pagina: Pagina }) {
             </a>
           </li>
           <li>
-            <span className="flex cursor-default items-center gap-3 rounded-xl px-3 py-2.5 text-ink-soft hover:bg-smoke">
+            <a
+              href="/dashboard/fazendas"
+              aria-current={pagina === "fazendas" ? "page" : undefined}
+              className={pagina === "fazendas" ? ativo : inativo}
+            >
               <MapPin className="size-[18px]" />
               Fazendas
-            </span>
+            </a>
           </li>
           <li>
             <span className="flex cursor-default items-center gap-3 rounded-xl px-3 py-2.5 text-ink-soft hover:bg-smoke">

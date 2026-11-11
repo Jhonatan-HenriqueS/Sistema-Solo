@@ -1,7 +1,7 @@
 // Leituras de demonstração. Os valores ficam escritos direto no JSX; não há banco nem cálculo.
 import { cn } from "@/lib/utils";
 
-type Nivel = "abaixo" | "ideal" | "excelente" | "acima";
+export type Nivel = "abaixo" | "ideal" | "excelente" | "acima";
 
 const niveis: Record<Nivel, { texto: string; cls: string }> = {
   abaixo: { texto: "Abaixo do ideal", cls: "bg-amber-100 text-amber-800" },
@@ -10,7 +10,7 @@ const niveis: Record<Nivel, { texto: string; cls: string }> = {
   acima: { texto: "Acima do ideal", cls: "bg-red-100 text-red-700" },
 };
 
-function Selo({ nivel, prefixo }: { nivel: Nivel; prefixo?: string }) {
+export function Selo({ nivel, prefixo }: { nivel: Nivel; prefixo?: string }) {
   return (
     <span
       className={cn(
