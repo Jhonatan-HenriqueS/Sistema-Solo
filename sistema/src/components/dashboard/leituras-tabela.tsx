@@ -52,7 +52,7 @@ function Linha(p: {
     <li
       className={cn(
         colunas,
-        "grid grid-cols-2 gap-x-4 gap-y-4 rounded-2xl bg-white p-4 ring-1 ring-black/5 lg:rounded-none lg:bg-transparent lg:px-5 lg:py-4 lg:ring-0 lg:hover:bg-smoke",
+        "grid grid-cols-2 gap-x-4 gap-y-8 rounded-2xl bg-white p-4 ring-1 ring-black/5 lg:rounded-none lg:bg-transparent lg:px-5 lg:py-4 lg:ring-0 lg:hover:bg-smoke",
       )}
     >
       <div className="col-span-2 lg:col-span-1">
