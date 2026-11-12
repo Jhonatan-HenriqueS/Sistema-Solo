@@ -1,16 +1,16 @@
 "use client";
 
-import { Activity, LayoutDashboard, LogOut, MapPin, Menu, Settings } from "lucide-react";
+import { Activity, Calculator, LayoutDashboard, LogOut, MapPin, Menu, Settings } from "lucide-react";
 import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Logo } from "@/components/brand/primitives";
 import { SITE_URL } from "@/lib/config";
 
-type Pagina = "dashboard" | "leituras" | "fazendas";
+type Pagina = "dashboard" | "leituras" | "fazendas" | "simuladores";
 
 const ativo = "flex items-center gap-3 rounded-xl bg-blue-soft px-3 py-2.5 font-medium text-blue";
 const inativo = "flex items-center gap-3 rounded-xl px-3 py-2.5 text-ink-soft hover:bg-smoke";
 
-/** Conteúdo da barra lateral. "Dashboard", "Leituras" e "Fazendas" têm rota; os outros itens são visuais. */
+/** Conteúdo da barra lateral. "Dashboard", "Leituras", "Fazendas" e "Simuladores" têm rota; os outros itens são visuais. */
 function SidebarContent({ pagina }: { pagina: Pagina }) {
   return (
     <div className="flex h-full flex-col">
@@ -51,6 +51,16 @@ function SidebarContent({ pagina }: { pagina: Pagina }) {
             >
               <MapPin className="size-[18px]" />
               Fazendas
+            </a>
+          </li>
+          <li>
+            <a
+              href="/dashboard/simuladores"
+              aria-current={pagina === "simuladores" ? "page" : undefined}
+              className={pagina === "simuladores" ? ativo : inativo}
+            >
+              <Calculator className="size-[18px]" />
+              Simuladores
             </a>
           </li>
           <li>
