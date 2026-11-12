@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { Droplets } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { Droplets, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -69,17 +69,52 @@ function lerPercentual(texto: string): number | null {
   return Number.isFinite(n) && n >= 0 && n <= 100 ? n : null;
 }
 
-/** Simulador de umidade: calcula e mostra o nível na hora. Nada é salvo. */
+/** Simulador de umidade: calcula o nível ao clicar em "Calcular". Nada é salvo. */
 export function SimuladorUmidade() {
   const [aberto, setAberto] = useState(false);
   const [valor, setValor] = useState("");
+  const [nivel, setNivel] = useState<NivelUmidade | null>(null);
+  const [calculando, setCalculando] = useState(false);
+  const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const percentual = lerPercentual(valor);
-  const nivel = percentual === null ? null : classificar(percentual);
+
+  function cancelarCalculo() {
+    if (timer.current) clearTimeout(timer.current);
+    timer.current = null;
+    setCalculando(false);
+  }
+
+  // Cancela o cálculo pendente se a página for fechada no meio do carregamento.
+  useEffect(() => cancelarCalculo, []);
 
   function mudarAberto(novo: boolean) {
     setAberto(novo);
-    if (!novo) setValor("");
+    if (!novo) {
+      cancelarCalculo();
+      setValor("");
+      setNivel(null);
+    }
+  }
+
+  function mudarValor(texto: string) {
+    // Valor novo invalida o resultado anterior.
+    cancelarCalculo();
+    setNivel(null);
+    setValor(texto.replace(/[^\d.,]/g, ""));
+  }
+
+  function calcular(e: React.FormEvent) {
+    e.preventDefault();
+    if (percentual === null || calculando) return;
+    const p = percentual;
+    setNivel(null);
+    setCalculando(true);
+    timer.current = setTimeout(() => {
+      setNivel(classificar(p));
+      setCalculando(false);
+      timer.current = null;
+    }, 1000);
   }
 
   return (
@@ -109,6 +144,7 @@ export function SimuladorUmidade() {
             </DialogDescription>
           </DialogHeader>
 
+          <form onSubmit={calcular} noValidate>
           <div className="space-y-5 px-6 py-6">
             <div className="space-y-2">
               <Label htmlFor="simulador-umidade">Umidade do medidor</Label>
@@ -117,7 +153,7 @@ export function SimuladorUmidade() {
                   id="simulador-umidade"
                   inputMode="decimal"
                   value={valor}
-                  onChange={(e) => setValor(e.target.value.replace(/[^\d.,]/g, ""))}
+                  onChange={(e) => mudarValor(e.target.value)}
                   placeholder="Ex.: 64"
                   aria-invalid={valor !== "" && percentual === null}
                   className="h-11 rounded-xl pr-12"
@@ -142,9 +178,14 @@ export function SimuladorUmidade() {
                   </p>
                   <p className="mt-1 text-[14px] leading-relaxed">{niveis[nivel].mensagem}</p>
                 </div>
+              ) : calculando ? (
+                <div className="flex items-center gap-2 rounded-2xl bg-smoke p-4 text-[14px] text-ink-soft">
+                  <Loader2 className="size-4 animate-spin text-blue" />
+                  Calculando…
+                </div>
               ) : (
                 <div className="rounded-2xl bg-smoke p-4 text-[14px] text-ink-soft">
-                  O resultado aparece aqui assim que você digitar o valor.
+                  Digite o valor e clique em Calcular para ver o resultado.
                 </div>
               )}
 
@@ -176,7 +217,12 @@ export function SimuladorUmidade() {
             <Button type="button" variant="outline" onClick={() => mudarAberto(false)} className="h-10 rounded-full px-5">
               Fechar
             </Button>
+            <Button type="submit" disabled={percentual === null || calculando} className="h-10 rounded-full px-5">
+              {calculando && <Loader2 className="animate-spin" />}
+              {calculando ? "Calculando…" : "Calcular"}
+            </Button>
           </DialogFooter>
+          </form>
         </DialogContent>
       </Dialog>
     </>
