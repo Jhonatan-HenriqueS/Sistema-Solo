@@ -27,9 +27,8 @@ export function AbaGeral({ onIrParaPerfil }: { onIrParaPerfil: () => void }) {
       <SecaoCard
         titulo="Conta"
         descricao="As informações principais da sua conta."
-        dica="Para alterar esses dados, use a aba Perfil."
-        acao={
-          <Button variant="outline" onClick={onIrParaPerfil} className="h-9 rounded-full px-4">
+        lateral={
+          <Button variant="outline" onClick={onIrParaPerfil} className="h-9 shrink-0 rounded-full px-4">
             Editar perfil
           </Button>
         }
@@ -46,7 +45,12 @@ export function AbaGeral({ onIrParaPerfil }: { onIrParaPerfil: () => void }) {
       </SecaoCard>
 
       <SecaoCard
-        titulo="Plano"
+        titulo={
+          <span className="flex items-center gap-2">
+            Pro
+            <span className="rounded-full bg-leaf-soft px-2.5 py-0.5 text-[12px] font-semibold text-forest">Ativo</span>
+          </span>
+        }
         descricao="Assinatura mensal, renovada a cada 30 dias."
         dica="A próxima cobrança é feita no dia do encerramento."
         acao={
@@ -57,11 +61,7 @@ export function AbaGeral({ onIrParaPerfil }: { onIrParaPerfil: () => void }) {
       >
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div>
-            <p className="flex items-center gap-2">
-              <span className="text-[22px] font-semibold">Pro</span>
-              <span className="rounded-full bg-leaf-soft px-2.5 py-0.5 text-[12px] font-semibold text-forest">Ativo</span>
-            </p>
-            <p className="mt-1 flex items-baseline gap-1">
+            <p className="flex items-baseline gap-1">
               <span className="text-[32px] leading-none font-medium tracking-tight">R$ 99,90</span>
               <span className="text-[14px] text-ink-soft">/mês</span>
             </p>

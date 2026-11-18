@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { Activity, Calculator, LayoutDashboard, LogOut, Menu, Settings, Sprout } from "lucide-react";
 import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Logo } from "@/components/brand/primitives";
@@ -10,13 +11,50 @@ type Pagina = "dashboard" | "leituras" | "talhoes" | "simuladores" | "configurac
 const ativo = "flex items-center gap-3 rounded-xl bg-blue-soft px-3 py-2.5 font-medium text-blue";
 const inativo = "flex items-center gap-3 rounded-xl px-3 py-2.5 text-ink-soft hover:bg-smoke";
 
+/**
+ * Item do menu. Usa navegação do Next (sem recarregar a página) e trava o clique
+ * no item da página atual, para não recarregar a rota em que o usuário já está.
+ */
+function ItemMenu({
+  href,
+  atual,
+  className,
+  children,
+}: {
+  href: string;
+  atual: boolean;
+  className?: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <Link
+      href={href}
+      aria-current={atual ? "page" : undefined}
+      aria-disabled={atual || undefined}
+      onClick={(e) => {
+        if (atual) e.preventDefault();
+      }}
+      className={`${atual ? `${ativo} cursor-default` : inativo} ${className ?? ""}`}
+    >
+      {children}
+    </Link>
+  );
+}
+
 /** Conteúdo da barra lateral. Todos os itens do menu têm rota. */
 function SidebarContent({ pagina }: { pagina: Pagina }) {
   return (
     <div className="flex h-full flex-col">
-      <a href="/dashboard" aria-label="Agro+ dashboard" className="px-2">
+      <Link
+        href="/dashboard"
+        aria-label="Agro+ dashboard"
+        onClick={(e) => {
+          if (pagina === "dashboard") e.preventDefault();
+        }}
+        className="px-2"
+      >
         <Logo />
-      </a>
+      </Link>
 
       <nav className="mt-10 flex-1">
         <p className="px-3 text-[11px] font-semibold tracking-[0.08em] text-ink-soft/70 uppercase">
@@ -24,57 +62,37 @@ function SidebarContent({ pagina }: { pagina: Pagina }) {
         </p>
         <ul className="mt-3 space-y-1 text-[15px]">
           <li>
-            <a
-              href="/dashboard"
-              aria-current={pagina === "dashboard" ? "page" : undefined}
-              className={pagina === "dashboard" ? ativo : inativo}
-            >
+            <ItemMenu href="/dashboard" atual={pagina === "dashboard"}>
               <LayoutDashboard className="size-[18px]" />
               Dashboard
-            </a>
+            </ItemMenu>
           </li>
           <li>
-            <a
-              href="/dashboard/leituras"
-              aria-current={pagina === "leituras" ? "page" : undefined}
-              className={pagina === "leituras" ? ativo : inativo}
-            >
+            <ItemMenu href="/dashboard/leituras" atual={pagina === "leituras"}>
               <Activity className="size-[18px]" />
               Leituras
-            </a>
+            </ItemMenu>
           </li>
           <li>
-            <a
-              href="/dashboard/talhoes"
-              aria-current={pagina === "talhoes" ? "page" : undefined}
-              className={pagina === "talhoes" ? ativo : inativo}
-            >
+            <ItemMenu href="/dashboard/talhoes" atual={pagina === "talhoes"}>
               <Sprout className="size-[18px]" />
               Talhões
-            </a>
+            </ItemMenu>
           </li>
           <li>
-            <a
-              href="/dashboard/simuladores"
-              aria-current={pagina === "simuladores" ? "page" : undefined}
-              className={pagina === "simuladores" ? ativo : inativo}
-            >
+            <ItemMenu href="/dashboard/simuladores" atual={pagina === "simuladores"}>
               <Calculator className="size-[18px]" />
               Simuladores
-            </a>
+            </ItemMenu>
           </li>
         </ul>
       </nav>
 
       {/* Configurações fica no fim do menu, logo acima do bloco da conta. */}
-      <a
-        href="/dashboard/configuracoes"
-        aria-current={pagina === "configuracoes" ? "page" : undefined}
-        className={`mb-3 text-[15px] ${pagina === "configuracoes" ? ativo : inativo}`}
-      >
+      <ItemMenu href="/dashboard/configuracoes" atual={pagina === "configuracoes"} className="mb-3 text-[15px]">
         <Settings className="size-[18px]" />
         Configurações
-      </a>
+      </ItemMenu>
 
       <div className="rounded-[20px] bg-smoke p-4">
         <div className="flex items-center gap-3">

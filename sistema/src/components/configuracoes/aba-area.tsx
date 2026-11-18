@@ -48,15 +48,10 @@ export function AbaArea() {
       <SecaoCard
         titulo="Unidade de área"
         descricao="Escolha como as áreas dos talhões e da fazenda aparecem no sistema."
-        dica="A conversão usa o valor do alqueire em hectares."
-        acao={
-          <Button variant="outline" className="h-9 rounded-full px-4">
-            Salvar
-          </Button>
-        }
       >
         <div className="max-w-[420px] space-y-2">
           <Label htmlFor="unidade-area">Unidade</Label>
+
           <Select value={unidade} onValueChange={(v) => v && setUnidade(v)}>
             <SelectTrigger id="unidade-area" className="h-11! w-full rounded-xl">
               <SelectValue>{(v: string) => <Opcao chave={v} />}</SelectValue>
@@ -88,6 +83,12 @@ export function AbaArea() {
             </p>
             <p className="mt-0.5 text-[13px]">Exemplo de como a área vai aparecer</p>
           </div>
+        </div>
+
+        <div className="mt-5 flex justify-end">
+          <Button variant="outline" className="h-11 w-full rounded-full px-5 sm:w-auto">
+            Salvar
+          </Button>
         </div>
       </SecaoCard>
     </div>

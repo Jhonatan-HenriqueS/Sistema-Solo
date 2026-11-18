@@ -11,7 +11,7 @@ export function SecaoCard({
   acao,
   className,
 }: {
-  titulo: string;
+  titulo: React.ReactNode;
   descricao?: React.ReactNode;
   /** Conteúdo à direita do título, como a foto de perfil. */
   lateral?: React.ReactNode;

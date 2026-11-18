@@ -17,8 +17,10 @@ import { Label } from "@/components/ui/label";
 import { SecaoCard } from "./secao-card";
 import { Avatar } from "./aba-geral";
 
+// Linha com o campo à esquerda e o botão fixo na direita do card; no celular o botão desce e ocupa a largura toda.
+const linha = "flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between";
 const salvar = (
-  <Button variant="outline" className="h-9 rounded-full px-4">
+  <Button variant="outline" className="h-11 shrink-0 rounded-full px-5">
     Salvar
   </Button>
 );
@@ -115,49 +117,47 @@ export function AbaPerfil() {
         titulo="Foto de perfil"
         descricao="Essa é a sua foto. Envie uma imagem do seu computador."
         lateral={<Avatar src={previa} tamanho="size-20" />}
-        dica="A foto é opcional, mas recomendada."
-        acao={salvar}
       >
         <input ref={arquivoRef} type="file" accept="image/*" onChange={escolherFoto} className="hidden" />
-        <Button variant="outline" onClick={() => arquivoRef.current?.click()} className="h-10 rounded-full px-4">
-          <ImageIcon /> Alterar foto
-        </Button>
+        <div className="flex flex-col gap-3 sm:flex-row sm:justify-between">
+          <Button variant="outline" onClick={() => arquivoRef.current?.click()} className="h-11 rounded-full px-5">
+            <ImageIcon /> Alterar foto
+          </Button>
+          {salvar}
+        </div>
       </SecaoCard>
 
       <SecaoCard
         titulo="Nome"
         descricao="Seu nome completo ou como prefere ser chamado."
-        dica="Use no máximo 32 caracteres."
-        acao={salvar}
       >
-        <Input defaultValue="João Silva" maxLength={32} aria-label="Nome" className="h-11 max-w-[420px] rounded-xl" />
+        <div className={linha}>
+          <Input defaultValue="João Silva" maxLength={32} aria-label="Nome" className="h-11 rounded-xl sm:max-w-[420px]" />
+          {salvar}
+        </div>
       </SecaoCard>
 
       <SecaoCard
         titulo="E-mail"
         descricao="Usado para entrar no sistema e receber avisos."
-        dica="Enviaremos um link de confirmação para o novo e-mail."
-        acao={salvar}
       >
-        <Input
-          type="email"
-          defaultValue="joao@fazendaboavista.com.br"
-          aria-label="E-mail"
-          className="h-11 max-w-[420px] rounded-xl"
-        />
+        <div className={linha}>
+          <Input
+            type="email"
+            defaultValue="joao@fazendaboavista.com.br"
+            aria-label="E-mail"
+            className="h-11 rounded-xl sm:max-w-[420px]"
+          />
+          {salvar}
+        </div>
       </SecaoCard>
 
       <SecaoCard
         titulo="Senha"
         descricao="A senha que você usa para entrar no sistema."
-        dica="Use pelo menos 6 caracteres."
-        acao={
-          <Button onClick={() => setSenhaAberto(true)} className="h-9 rounded-full px-4">
-            Alterar senha
-          </Button>
-        }
       >
-        <div className="relative max-w-[420px]">
+        <div className={linha}>
+        <div className="relative w-full sm:max-w-[420px]">
           <Input
             type={verSenha ? "text" : "password"}
             value="agroplus2026"
@@ -173,6 +173,10 @@ export function AbaPerfil() {
           >
             {verSenha ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
           </button>
+        </div>
+        <Button onClick={() => setSenhaAberto(true)} className="h-11 shrink-0 rounded-full px-5">
+          Alterar senha
+        </Button>
         </div>
       </SecaoCard>
 
