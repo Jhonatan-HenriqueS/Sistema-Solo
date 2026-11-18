@@ -2,12 +2,13 @@
 
 // Submenu de Configurações: lateral no desktop, abas no topo no celular.
 import { useState } from "react";
-import { Settings, User } from "lucide-react";
+import { Ruler, Settings, User } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { AbaArea } from "./aba-area";
 import { AbaGeral } from "./aba-geral";
 import { AbaPerfil } from "./aba-perfil";
 
-type Aba = "geral" | "perfil";
+type Aba = "geral" | "perfil" | "area";
 
 function ItemMenu({ ativo, onClick, icone: Icone, children }: { ativo: boolean; onClick: () => void; icone: typeof Settings; children: string }) {
   return (
@@ -31,16 +32,21 @@ export function ConfiguracoesView() {
 
   return (
     <div className="mt-8 flex flex-col gap-6 md:flex-row md:items-start md:gap-10">
-      <nav className="flex gap-1 md:sticky md:top-10 md:w-[200px] md:flex-col">
+      <nav className="flex gap-1 overflow-x-auto md:sticky md:top-10 md:w-[200px] md:flex-col">
         <ItemMenu ativo={aba === "geral"} onClick={() => setAba("geral")} icone={Settings}>
           Geral
         </ItemMenu>
         <ItemMenu ativo={aba === "perfil"} onClick={() => setAba("perfil")} icone={User}>
           Perfil
         </ItemMenu>
+        <ItemMenu ativo={aba === "area"} onClick={() => setAba("area")} icone={Ruler}>
+          Unidade de área
+        </ItemMenu>
       </nav>
       <div className="min-w-0 flex-1 md:max-w-[820px]">
-        {aba === "geral" ? <AbaGeral onIrParaPerfil={() => setAba("perfil")} /> : <AbaPerfil />}
+        {aba === "geral" && <AbaGeral onIrParaPerfil={() => setAba("perfil")} />}
+        {aba === "perfil" && <AbaPerfil />}
+        {aba === "area" && <AbaArea />}
       </div>
     </div>
   );
