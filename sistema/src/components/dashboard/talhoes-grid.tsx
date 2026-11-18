@@ -71,7 +71,7 @@ function Talhao(p: {
             </dd>
           </div>
           <div>
-            <dt className={rotulo}>Umidade da última coleta</dt>
+            <dt className={rotulo}>Umidade</dt>
             <dd className="mt-1 flex flex-wrap items-center gap-2 text-[15px] font-medium">
               <span className="flex items-center gap-1.5">
                 <Droplets className="size-3.5 text-blue" /> {p.umidade}%
