@@ -58,8 +58,8 @@ export function AuthShell({
         </div>
       </aside>
 
-      <section className="flex flex-col px-3 py-6 lg:items-center lg:justify-center lg:px-10">
-        <div className="mb-10 flex items-center justify-between lg:hidden">
+      <section className="relative flex flex-col px-3 py-24 lg:items-center lg:justify-center lg:px-10 lg:py-6">
+        <div className="absolute inset-x-3 top-6 flex items-center justify-between lg:hidden">
           <a href={SITE_URL} aria-label="Agro+ início">
             <Logo />
           </a>
@@ -72,7 +72,7 @@ export function AuthShell({
           </a>
         </div>
 
-        <div className="mx-auto w-full max-w-[440px]">
+        <div className="mx-auto my-auto w-full max-w-[440px]">
           <Heading
             as="h1"
             text={title}

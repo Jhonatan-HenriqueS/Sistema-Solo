@@ -53,8 +53,8 @@ function Linha(p: {
     >
       <div className="col-span-2 lg:col-span-1">
         <Rotulo>Local</Rotulo>
-        <p className="text-[14px] font-semibold">{p.fazenda}</p>
-        <p className="text-[13px] text-ink-soft">{p.talhao}</p>
+        <p className="text-[14px] font-semibold">{p.talhao}</p>
+        <p className="text-[13px] text-ink-soft">{p.fazenda}</p>
       </div>
       <div>
         <Rotulo>Data</Rotulo>
@@ -89,7 +89,7 @@ export function LeiturasTabela() {
           "hidden border-b border-black/5 bg-smoke px-5 py-3 text-[12px] font-semibold tracking-[0.04em] text-ink-soft uppercase",
         )}
       >
-        <span>Fazenda · Talhão</span>
+        <span>Talhão · Fazenda</span>
         <span>Data</span>
         <span>Hora</span>
         <span>NPK (mg/kg)</span>
