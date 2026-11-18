@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { ImageIcon } from "lucide-react";
+import { Bean, Cloud, Coffee, ImageIcon, Leaf, Sprout, Wheat, type LucideIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -21,6 +21,26 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+
+// Ícone de cada cultura, usado nas opções e no valor escolhido do select.
+const iconeCultura: Record<string, LucideIcon> = {
+  Soja: Sprout,
+  Milho: Wheat,
+  "Cana-de-açúcar": Leaf,
+  Café: Coffee,
+  Algodão: Cloud,
+  Feijão: Bean,
+};
+
+function Cultura({ nome }: { nome: string }) {
+  const Icone = iconeCultura[nome];
+  return (
+    <span className="flex items-center gap-2">
+      {Icone && <Icone className="size-4 text-forest" />}
+      {nome}
+    </span>
+  );
+}
 
 export type DadosTalhao = {
   nome: string;
@@ -129,15 +149,19 @@ export function TalhaoModal({
               <Label htmlFor="talhao-cultura">Cultura</Label>
               <Select value={cultura || null} onValueChange={(v) => setCultura(v ?? "")}>
                 <SelectTrigger id="talhao-cultura" className="h-11! w-full rounded-xl">
-                  <SelectValue placeholder="Selecione a cultura" />
+                  <SelectValue>
+                    {(v: string | null) =>
+                      v ? <Cultura nome={v} /> : <span className="text-muted-foreground">Selecione a cultura</span>
+                    }
+                  </SelectValue>
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="Soja">Soja</SelectItem>
-                  <SelectItem value="Milho">Milho</SelectItem>
-                  <SelectItem value="Cana-de-açúcar">Cana-de-açúcar</SelectItem>
-                  <SelectItem value="Café">Café</SelectItem>
-                  <SelectItem value="Algodão">Algodão</SelectItem>
-                  <SelectItem value="Feijão">Feijão</SelectItem>
+                  <SelectItem value="Soja"><Cultura nome="Soja" /></SelectItem>
+                  <SelectItem value="Milho"><Cultura nome="Milho" /></SelectItem>
+                  <SelectItem value="Cana-de-açúcar"><Cultura nome="Cana-de-açúcar" /></SelectItem>
+                  <SelectItem value="Café"><Cultura nome="Café" /></SelectItem>
+                  <SelectItem value="Algodão"><Cultura nome="Algodão" /></SelectItem>
+                  <SelectItem value="Feijão"><Cultura nome="Feijão" /></SelectItem>
                 </SelectContent>
               </Select>
             </div>
