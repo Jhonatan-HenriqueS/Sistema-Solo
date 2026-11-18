@@ -13,6 +13,13 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 
 import { classificar, niveis, ordem, type NivelUmidade } from "./umidade-niveis";
@@ -27,6 +34,7 @@ function lerPercentual(texto: string): number | null {
 /** Simulador de umidade: calcula o nível ao clicar em "Calcular". Nada é salvo. */
 export function SimuladorUmidade() {
   const [aberto, setAberto] = useState(false);
+  const [talhao, setTalhao] = useState("");
   const [valor, setValor] = useState("");
   const [nivel, setNivel] = useState<NivelUmidade | null>(null);
   const [calculando, setCalculando] = useState(false);
@@ -47,6 +55,7 @@ export function SimuladorUmidade() {
     setAberto(novo);
     if (!novo) {
       cancelarCalculo();
+      setTalhao("");
       setValor("");
       setNivel(null);
     }
@@ -59,9 +68,16 @@ export function SimuladorUmidade() {
     setValor(texto.replace(/[^\d.,]/g, ""));
   }
 
+  function mudarTalhao(novo: string) {
+    // Outro talhão invalida o resultado anterior.
+    cancelarCalculo();
+    setNivel(null);
+    setTalhao(novo);
+  }
+
   function calcular(e: React.FormEvent) {
     e.preventDefault();
-    if (percentual === null || calculando) return;
+    if (talhao === "" || percentual === null || calculando) return;
     const p = percentual;
     setNivel(null);
     setCalculando(true);
@@ -95,12 +111,29 @@ export function SimuladorUmidade() {
               Simulador de umidade
             </DialogTitle>
             <DialogDescription className="text-[14px]">
-              Digite o valor que o medidor mostrou no solo.
+              Escolha o talhão e digite o valor que o medidor mostrou no solo.
             </DialogDescription>
           </DialogHeader>
 
           <form onSubmit={calcular} noValidate>
           <div className="space-y-5 px-6 py-6">
+            <div className="space-y-2">
+              <Label htmlFor="simulador-talhao">Talhão</Label>
+              <Select value={talhao || null} onValueChange={(v) => mudarTalhao(v ?? "")}>
+                <SelectTrigger id="simulador-talhao" className="h-11! w-full rounded-xl">
+                  <SelectValue placeholder="Selecione o talhão" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Talhão 1 · Café">Talhão 1 · Café</SelectItem>
+                  <SelectItem value="Talhão 2 · Milho">Talhão 2 · Milho</SelectItem>
+                  <SelectItem value="Talhão 3 · Soja">Talhão 3 · Soja</SelectItem>
+                  <SelectItem value="Talhão 4 · Feijão">Talhão 4 · Feijão</SelectItem>
+                  <SelectItem value="Talhão 5 · Cana-de-açúcar">Talhão 5 · Cana-de-açúcar</SelectItem>
+                  <SelectItem value="Talhão 6 · Algodão">Talhão 6 · Algodão</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
             <div className="space-y-2">
               <Label htmlFor="simulador-umidade">Umidade do medidor</Label>
               <div className="relative">
@@ -126,7 +159,7 @@ export function SimuladorUmidade() {
               {nivel ? (
                 <div className={cn("rounded-2xl p-4 ring-1", niveis[nivel].cls)}>
                   <p className="text-[12px] font-semibold tracking-[0.06em] uppercase opacity-80">
-                    Resultado
+                    Resultado · {talhao}
                   </p>
                   <p className="mt-1 text-[22px] leading-tight font-semibold">
                     {niveis[nivel].titulo}
@@ -140,7 +173,7 @@ export function SimuladorUmidade() {
                 </div>
               ) : (
                 <div className="rounded-2xl bg-smoke p-4 text-[14px] text-ink-soft">
-                  Digite o valor e clique em Calcular para ver o resultado.
+                  Escolha o talhão, digite o valor e clique em Calcular.
                 </div>
               )}
 
@@ -172,7 +205,7 @@ export function SimuladorUmidade() {
             <Button type="button" variant="outline" onClick={() => mudarAberto(false)} className="h-10 rounded-full px-5">
               Fechar
             </Button>
-            <Button type="submit" disabled={percentual === null || calculando} className="h-10 rounded-full px-5">
+            <Button type="submit" disabled={talhao === "" || percentual === null || calculando} className="h-10 rounded-full px-5">
               {calculando && <Loader2 className="animate-spin" />}
               {calculando ? "Calculando…" : "Calcular"}
             </Button>
