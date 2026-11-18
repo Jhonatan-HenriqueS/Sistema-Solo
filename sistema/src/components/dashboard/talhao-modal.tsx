@@ -2,7 +2,8 @@
 
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { Bean, Cloud, Coffee, ImageIcon, Leaf, Sprout, Wheat, type LucideIcon } from "lucide-react";
+import { ImageIcon } from "lucide-react";
+import { iconeCultura } from "./culturas";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -21,16 +22,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-
-// Ícone de cada cultura, usado nas opções e no valor escolhido do select.
-const iconeCultura: Record<string, LucideIcon> = {
-  Soja: Sprout,
-  Milho: Wheat,
-  "Cana-de-açúcar": Leaf,
-  Café: Coffee,
-  Algodão: Cloud,
-  Feijão: Bean,
-};
 
 function Cultura({ nome }: { nome: string }) {
   const Icone = iconeCultura[nome];

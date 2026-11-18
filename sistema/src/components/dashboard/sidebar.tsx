@@ -1,12 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { Activity, Calculator, LayoutDashboard, LogOut, Menu, Settings, Sprout } from "lucide-react";
+import { Activity, Calculator, LayoutDashboard, Leaf, LogOut, Menu, Settings, Sprout } from "lucide-react";
 import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Logo } from "@/components/brand/primitives";
 import { SITE_URL } from "@/lib/config";
 
-type Pagina = "dashboard" | "leituras" | "talhoes" | "simuladores" | "configuracoes";
+type Pagina = "dashboard" | "leituras" | "talhoes" | "plantios" | "simuladores" | "configuracoes";
 
 const ativo = "flex items-center gap-3 rounded-xl bg-blue-soft px-3 py-2.5 font-medium text-blue";
 const inativo = "flex items-center gap-3 rounded-xl px-3 py-2.5 text-ink-soft hover:bg-smoke";
@@ -77,6 +77,12 @@ function SidebarContent({ pagina }: { pagina: Pagina }) {
             <ItemMenu href="/dashboard/talhoes" atual={pagina === "talhoes"}>
               <Sprout className="size-[18px]" />
               Talhões
+            </ItemMenu>
+          </li>
+          <li>
+            <ItemMenu href="/dashboard/plantios" atual={pagina === "plantios"}>
+              <Leaf className="size-[18px]" />
+              Plantios
             </ItemMenu>
           </li>
           <li>
