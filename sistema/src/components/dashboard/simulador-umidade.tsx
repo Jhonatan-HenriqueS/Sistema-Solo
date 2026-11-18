@@ -15,52 +15,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 
-type NivelUmidade = "critico" | "abaixo" | "ideal" | "acima" | "encharcado";
-
-// Limites (em % do medidor) calculados para CC = 70% e solo de textura média.
-// Ficam só no código: o usuário vê apenas o nível.
-const PMP = 35;
-const LIMIAR_IRRIGACAO = 52.5;
-const CC = 70;
-const EXCESSO = 85;
-
-const niveis: Record<NivelUmidade, { titulo: string; mensagem: string; cls: string }> = {
-  critico: {
-    titulo: "Crítico",
-    mensagem: "Solo seco demais. A planta pode murchar: irrigue o quanto antes.",
-    cls: "bg-red-100 text-red-700 ring-red-200",
-  },
-  abaixo: {
-    titulo: "Abaixo do ideal",
-    mensagem: "A umidade está baixa e precisa melhorar. Planeje a próxima irrigação.",
-    cls: "bg-amber-100 text-amber-800 ring-amber-200",
-  },
-  ideal: {
-    titulo: "Ideal",
-    mensagem: "Umidade recomendada. O solo está bom, não precisa fazer nada.",
-    cls: "bg-leaf-soft text-forest ring-leaf/30",
-  },
-  acima: {
-    titulo: "Acima do ideal",
-    mensagem: "Solo com água demais. Regule a rega e talvez pare de irrigar por enquanto.",
-    cls: "bg-blue-soft text-blue ring-blue/20",
-  },
-  encharcado: {
-    titulo: "Encharcado",
-    mensagem: "Solo saturado. Suspenda a irrigação: o excesso pode prejudicar as raízes.",
-    cls: "bg-[#1e3a8a] text-white ring-[#1e3a8a]",
-  },
-};
-
-const ordem: NivelUmidade[] = ["critico", "abaixo", "ideal", "acima", "encharcado"];
-
-function classificar(percentual: number): NivelUmidade {
-  if (percentual < PMP) return "critico";
-  if (percentual < LIMIAR_IRRIGACAO) return "abaixo";
-  if (percentual <= CC) return "ideal";
-  if (percentual <= EXCESSO) return "acima";
-  return "encharcado";
-}
+import { classificar, niveis, ordem, type NivelUmidade } from "./umidade-niveis";
 
 /** Converte o texto digitado em número de 0 a 100, aceitando vírgula. Vazio ou inválido vira null. */
 function lerPercentual(texto: string): number | null {

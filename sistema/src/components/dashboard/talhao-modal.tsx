@@ -22,49 +22,17 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-export type DadosFazenda = {
+export type DadosTalhao = {
   nome: string;
-  cidade: string;
-  uf: string;
+  cultura: string;
   area: string;
 };
 
-type Estado = { sigla: string; nome: string };
-
-const IBGE_ESTADOS = "https://servicodados.ibge.gov.br/api/v1/localidades/estados";
-
-// Guarda a resposta do IBGE para não buscar de novo a cada abertura do modal.
-let estadosCache: Estado[] | null = null;
-
-function useEstados() {
-  const [estados, setEstados] = useState<Estado[] | null>(estadosCache);
-  const [falhou, setFalhou] = useState(false);
-
-  useEffect(() => {
-    if (estadosCache) return;
-    let ativo = true;
-    fetch(IBGE_ESTADOS)
-      .then((r) => (r.ok ? r.json() : Promise.reject(r.status)))
-      .then((lista: Estado[]) => {
-        estadosCache = [...lista].sort((a, b) => a.sigla.localeCompare(b.sigla));
-        if (ativo) setEstados(estadosCache);
-      })
-      .catch(() => {
-        if (ativo) setFalhou(true);
-      });
-    return () => {
-      ativo = false;
-    };
-  }, []);
-
-  return { estados, falhou };
-}
-
 /**
- * Modal de editar/criar fazenda. Só visual: ao confirmar ele fecha e nada é salvo.
+ * Modal de editar/criar talhão. Só visual: ao confirmar ele fecha e nada é salvo.
  * Abertura e fechamento são controlados pelo pai via `open` / `onOpenChange`.
  */
-export function FazendaModal({
+export function TalhaoModal({
   open,
   onOpenChange,
   modo,
@@ -73,15 +41,13 @@ export function FazendaModal({
   open: boolean;
   onOpenChange: (aberto: boolean) => void;
   modo: "editar" | "criar";
-  inicial: DadosFazenda;
+  inicial: DadosTalhao;
 }) {
   const [nome, setNome] = useState(inicial.nome);
-  const [cidade, setCidade] = useState(inicial.cidade);
-  const [uf, setUf] = useState(inicial.uf);
+  const [cultura, setCultura] = useState(inicial.cultura);
   const [area, setArea] = useState(inicial.area);
   const [previa, setPrevia] = useState<string | null>(null);
   const arquivoRef = useRef<HTMLInputElement>(null);
-  const { estados, falhou } = useEstados();
 
   // Libera a URL temporária da prévia ao trocar de imagem ou fechar.
   useEffect(() => {
@@ -90,8 +56,7 @@ export function FazendaModal({
     };
   }, [previa]);
 
-  const valido =
-    nome.trim() !== "" && cidade.trim() !== "" && uf.length === 2 && Number(area) > 0;
+  const valido = nome.trim() !== "" && cultura !== "" && Number(area) > 0;
 
   function escolherImagem(e: React.ChangeEvent<HTMLInputElement>) {
     const arquivo = e.target.files?.[0];
@@ -109,12 +74,12 @@ export function FazendaModal({
         <form onSubmit={enviar} noValidate>
           <DialogHeader className="px-6 pt-6">
             <DialogTitle className="font-sans text-[24px] leading-tight font-semibold">
-              {modo === "editar" ? "Editar fazenda" : "Nova fazenda"}
+              {modo === "editar" ? "Editar talhão" : "Novo talhão"}
             </DialogTitle>
             <DialogDescription className="text-[14px]">
               {modo === "editar"
-                ? `Altere os dados da ${inicial.nome}.`
-                : "Cadastre uma nova propriedade no seu painel."}
+                ? `Altere os dados do ${inicial.nome}.`
+                : "Cadastre um novo talhão da Fazenda Boa Vista."}
             </DialogDescription>
           </DialogHeader>
 
@@ -123,7 +88,7 @@ export function FazendaModal({
               <div className="relative h-36 overflow-hidden rounded-2xl bg-smoke">
                 <Image
                   src={previa ?? "/images/hero-campo.webp"}
-                  alt="Imagem da fazenda"
+                  alt="Imagem do talhão"
                   fill
                   unoptimized={previa !== null}
                   sizes="480px"
@@ -150,60 +115,38 @@ export function FazendaModal({
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="fazenda-nome">Nome</Label>
+              <Label htmlFor="talhao-nome">Nome</Label>
               <Input
-                id="fazenda-nome"
+                id="talhao-nome"
                 value={nome}
                 onChange={(e) => setNome(e.target.value)}
-                placeholder="Ex.: Fazenda Boa Vista"
+                placeholder="Ex.: Talhão 7"
                 className="h-11 rounded-xl"
               />
             </div>
 
-            <div className="grid grid-cols-[1fr_96px] gap-3">
-              <div className="space-y-2">
-                <Label htmlFor="fazenda-cidade">Cidade</Label>
-                <Input
-                  id="fazenda-cidade"
-                  value={cidade}
-                  onChange={(e) => setCidade(e.target.value)}
-                  placeholder="Ex.: Ji-Paraná"
-                  className="h-11 rounded-xl"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="fazenda-uf">UF</Label>
-                {falhou ? (
-                  <Input
-                    id="fazenda-uf"
-                    value={uf}
-                    maxLength={2}
-                    onChange={(e) => setUf(e.target.value.replace(/[^a-z]/gi, "").toUpperCase())}
-                    placeholder="RO"
-                    className="h-11 rounded-xl uppercase"
-                  />
-                ) : (
-                  <Select value={uf || null} onValueChange={(v) => setUf(v ?? "")} disabled={!estados}>
-                    <SelectTrigger id="fazenda-uf" className="h-11! w-full rounded-xl">
-                      <SelectValue placeholder={estados ? "UF" : "Carregando…"} />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {estados?.map((e) => (
-                        <SelectItem key={e.sigla} value={e.sigla} title={e.nome}>
-                          {e.sigla}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                )}
-              </div>
+            <div className="space-y-2">
+              <Label htmlFor="talhao-cultura">Cultura</Label>
+              <Select value={cultura || null} onValueChange={(v) => setCultura(v ?? "")}>
+                <SelectTrigger id="talhao-cultura" className="h-11! w-full rounded-xl">
+                  <SelectValue placeholder="Selecione a cultura" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Soja">Soja</SelectItem>
+                  <SelectItem value="Milho">Milho</SelectItem>
+                  <SelectItem value="Cana-de-açúcar">Cana-de-açúcar</SelectItem>
+                  <SelectItem value="Café">Café</SelectItem>
+                  <SelectItem value="Algodão">Algodão</SelectItem>
+                  <SelectItem value="Feijão">Feijão</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="fazenda-area">Área</Label>
+              <Label htmlFor="talhao-area">Área</Label>
               <div className="relative">
                 <Input
-                  id="fazenda-area"
+                  id="talhao-area"
                   inputMode="numeric"
                   value={area}
                   onChange={(e) => setArea(e.target.value.replace(/\D/g, ""))}
@@ -227,7 +170,7 @@ export function FazendaModal({
               Cancelar
             </Button>
             <Button type="submit" disabled={!valido} className="h-10 rounded-full px-5">
-              {modo === "editar" ? "Salvar alterações" : "Criar fazenda"}
+              {modo === "editar" ? "Salvar alterações" : "Criar talhão"}
             </Button>
           </DialogFooter>
         </form>
