@@ -5,12 +5,12 @@ import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/s
 import { Logo } from "@/components/brand/primitives";
 import { SITE_URL } from "@/lib/config";
 
-type Pagina = "dashboard" | "leituras" | "talhoes" | "simuladores";
+type Pagina = "dashboard" | "leituras" | "talhoes" | "simuladores" | "configuracoes";
 
 const ativo = "flex items-center gap-3 rounded-xl bg-blue-soft px-3 py-2.5 font-medium text-blue";
 const inativo = "flex items-center gap-3 rounded-xl px-3 py-2.5 text-ink-soft hover:bg-smoke";
 
-/** Conteúdo da barra lateral. "Dashboard", "Leituras", "Talhões" e "Simuladores" têm rota; os outros itens são visuais. */
+/** Conteúdo da barra lateral. Todos os itens do menu têm rota. */
 function SidebarContent({ pagina }: { pagina: Pagina }) {
   return (
     <div className="flex h-full flex-col">
@@ -63,14 +63,18 @@ function SidebarContent({ pagina }: { pagina: Pagina }) {
               Simuladores
             </a>
           </li>
-          <li>
-            <span className="flex cursor-default items-center gap-3 rounded-xl px-3 py-2.5 text-ink-soft hover:bg-smoke">
-              <Settings className="size-[18px]" />
-              Configurações
-            </span>
-          </li>
         </ul>
       </nav>
+
+      {/* Configurações fica no fim do menu, logo acima do bloco da conta. */}
+      <a
+        href="/dashboard/configuracoes"
+        aria-current={pagina === "configuracoes" ? "page" : undefined}
+        className={`mb-3 text-[15px] ${pagina === "configuracoes" ? ativo : inativo}`}
+      >
+        <Settings className="size-[18px]" />
+        Configurações
+      </a>
 
       <div className="rounded-[20px] bg-smoke p-4">
         <div className="flex items-center gap-3">
