@@ -23,8 +23,11 @@ type DadosPlantio = {
   nResumo: string;
   /** Detalhe da dose de N para o modal. */
   nDetalhe: React.ReactNode;
-  /** Limite inferior da faixa ideal de umidade, em % da água disponível. */
-  umidadeMin: number;
+  /**
+   * Leitura mínima ideal do medidor (garfo), em %. O máximo é 70% (capacidade de campo), igual ao simulador.
+   * Conta: 35 (murcha) + (1 − p) × (70 − 35), com p = fração da água que a cultura gasta sem sofrer (FAO-56).
+   */
+  umidadeMin: string;
   /** O café tem tabelas próprias de P (mais baixa) e de K (mais alta, sem a classe "Muito baixo"). */
   tabelaCafe?: boolean;
 };
@@ -63,24 +66,24 @@ function TabelaPK({ tabelaCafe }: { tabelaCafe?: boolean }) {
     <div className="space-y-5">
       <div>
         <p className="text-[14px] font-semibold">Fósforo (P) · mg/dm³</p>
-        <p className="mt-0.5 text-[13px] text-ink-soft">Depende do teor de argila do solo. Ache a linha do seu talhão.</p>
+        <p className="mt-0.5 text-[13px] text-ink-soft">Muda com o tipo de terra: ache a linha da sua.</p>
         <div className="mt-2 overflow-x-auto rounded-2xl ring-1 ring-black/5">
           <table className="w-full text-[13px]">
             <Cabecalho primeira="Argila" />
             <tbody className="divide-y divide-black/5">
               {tabelaCafe ? (
                 <>
-                  <tr><td className="px-3 py-2.5 font-medium whitespace-nowrap">60–100%</td><td className={celula}>≤ 1,9</td><td className={celula}>2,0–4,0</td><td className={celula}>4,1–6,0</td><td className={celula}>6,1–9,0</td><td className={celula}>&gt; 9,0</td></tr>
-                  <tr className="bg-blue-soft/40"><td className="px-3 py-2.5 font-medium whitespace-nowrap">35–60%</td><td className={celula}>≤ 3,0</td><td className={celula}>3,1–6,0</td><td className={celula}>6,1–9,0</td><td className={celula}>9,1–13,5</td><td className={celula}>&gt; 13,5</td></tr>
-                  <tr><td className="px-3 py-2.5 font-medium whitespace-nowrap">15–35%</td><td className={celula}>≤ 5,0</td><td className={celula}>5,1–9,0</td><td className={celula}>9,1–15,0</td><td className={celula}>15,1–22,5</td><td className={celula}>&gt; 22,5</td></tr>
-                  <tr><td className="px-3 py-2.5 font-medium whitespace-nowrap">0–15%</td><td className={celula}>≤ 7,5</td><td className={celula}>7,5–15,0</td><td className={celula}>15,1–22,5</td><td className={celula}>22,6–33,8</td><td className={celula}>&gt; 33,8</td></tr>
+                  <tr><td className="px-3 py-2.5 font-medium whitespace-nowrap">60 – 100%</td><td className={celula}>≤ 1,9</td><td className={celula}>2,0 – 4,0</td><td className={celula}>4,1 – 6,0</td><td className={celula}>6,1 – 9,0</td><td className={celula}>&gt; 9,0</td></tr>
+                  <tr className="bg-blue-soft/40"><td className="px-3 py-2.5 font-medium whitespace-nowrap">35 – 60%</td><td className={celula}>≤ 3,0</td><td className={celula}>3,1 – 6,0</td><td className={celula}>6,1 – 9,0</td><td className={celula}>9,1 – 13,5</td><td className={celula}>&gt; 13,5</td></tr>
+                  <tr><td className="px-3 py-2.5 font-medium whitespace-nowrap">15 – 35%</td><td className={celula}>≤ 5,0</td><td className={celula}>5,1 – 9,0</td><td className={celula}>9,1 – 15,0</td><td className={celula}>15,1 – 22,5</td><td className={celula}>&gt; 22,5</td></tr>
+                  <tr><td className="px-3 py-2.5 font-medium whitespace-nowrap">0 – 15%</td><td className={celula}>≤ 7,5</td><td className={celula}>7,5 – 15,0</td><td className={celula}>15,1 – 22,5</td><td className={celula}>22,6 – 33,8</td><td className={celula}>&gt; 33,8</td></tr>
                 </>
               ) : (
                 <>
-                  <tr><td className="px-3 py-2.5 font-medium whitespace-nowrap">60–100%</td><td className={celula}>≤ 2,7</td><td className={celula}>2,8–5,4</td><td className={celula}>5,5–8,0</td><td className={celula}>8,1–12,0</td><td className={celula}>&gt; 12,0</td></tr>
-                  <tr className="bg-blue-soft/40"><td className="px-3 py-2.5 font-medium whitespace-nowrap">35–60%</td><td className={celula}>≤ 4,0</td><td className={celula}>4,1–8,0</td><td className={celula}>8,1–12,0</td><td className={celula}>12,1–18,0</td><td className={celula}>&gt; 18,0</td></tr>
-                  <tr><td className="px-3 py-2.5 font-medium whitespace-nowrap">15–35%</td><td className={celula}>≤ 6,6</td><td className={celula}>6,7–12,0</td><td className={celula}>12,1–20,0</td><td className={celula}>20,1–30,0</td><td className={celula}>&gt; 30,0</td></tr>
-                  <tr><td className="px-3 py-2.5 font-medium whitespace-nowrap">0–15%</td><td className={celula}>≤ 10,0</td><td className={celula}>10,1–20,0</td><td className={celula}>20,1–30,0</td><td className={celula}>30,1–45,0</td><td className={celula}>&gt; 45,0</td></tr>
+                  <tr><td className="px-3 py-2.5 font-medium whitespace-nowrap">60 – 100%</td><td className={celula}>≤ 2,7</td><td className={celula}>2,8 – 5,4</td><td className={celula}>5,5 – 8,0</td><td className={celula}>8,1 – 12,0</td><td className={celula}>&gt; 12,0</td></tr>
+                  <tr className="bg-blue-soft/40"><td className="px-3 py-2.5 font-medium whitespace-nowrap">35 – 60%</td><td className={celula}>≤ 4,0</td><td className={celula}>4,1 – 8,0</td><td className={celula}>8,1 – 12,0</td><td className={celula}>12,1 – 18,0</td><td className={celula}>&gt; 18,0</td></tr>
+                  <tr><td className="px-3 py-2.5 font-medium whitespace-nowrap">15 – 35%</td><td className={celula}>≤ 6,6</td><td className={celula}>6,7 – 12,0</td><td className={celula}>12,1 – 20,0</td><td className={celula}>20,1 – 30,0</td><td className={celula}>&gt; 30,0</td></tr>
+                  <tr><td className="px-3 py-2.5 font-medium whitespace-nowrap">0 – 15%</td><td className={celula}>≤ 10,0</td><td className={celula}>10,1 – 20,0</td><td className={celula}>20,1 – 30,0</td><td className={celula}>30,1 – 45,0</td><td className={celula}>&gt; 45,0</td></tr>
                 </>
               )}
             </tbody>
@@ -98,9 +101,9 @@ function TabelaPK({ tabelaCafe }: { tabelaCafe?: boolean }) {
             <Cabecalho primeira="Solo" />
             <tbody>
               {tabelaCafe ? (
-                <tr><td className="px-3 py-2.5 font-medium">Todos</td><td className={celula}>—</td><td className={celula}>&lt; 60</td><td className={celula}>60–120</td><td className={celula}>120–200</td><td className={celula}>&gt; 200</td></tr>
+                <tr><td className="px-3 py-2.5 font-medium">Todos</td><td className={celula}>—</td><td className={celula}>&lt; 60</td><td className={celula}>60 – 120</td><td className={celula}>120 – 200</td><td className={celula}>&gt; 200</td></tr>
               ) : (
-                <tr><td className="px-3 py-2.5 font-medium">Todos</td><td className={celula}>≤ 15</td><td className={celula}>16–40</td><td className={celula}>41–70</td><td className={celula}>71–120</td><td className={celula}>&gt; 120</td></tr>
+                <tr><td className="px-3 py-2.5 font-medium">Todos</td><td className={celula}>≤ 15</td><td className={celula}>16 – 40</td><td className={celula}>41 – 70</td><td className={celula}>71 – 120</td><td className={celula}>&gt; 120</td></tr>
               )}
             </tbody>
           </table>
@@ -134,13 +137,13 @@ function TabelaModal({
         </DialogHeader>
 
         <div className="space-y-6 px-6 py-6">
-          <div className="rounded-2xl bg-smoke p-4 text-[13px] leading-relaxed text-ink-soft">
-            <p className="font-semibold text-ink">Como ler</p>
-            <ul className="mt-1.5 list-disc space-y-1 pl-4">
-              <li><b className="text-ink">Muito baixo e Baixo:</b> o solo precisa de adubação de correção.</li>
-              <li><b className="text-ink">Médio:</b> o limite de cima desta classe é o nível crítico. Abaixo dele, a produção cai.</li>
-              <li><b className="text-ink">Bom:</b> é o alvo. Basta repor o que a colheita retira.</li>
-              <li><b className="text-ink">Muito bom:</b> não precisa adubar com este nutriente por enquanto.</li>
+          <div className="rounded-2xl bg-smoke p-4 text-[14px] leading-relaxed">
+            <p>Ache o número da sua análise na tabela e veja a cor:</p>
+            <ul className="mt-2 space-y-1">
+              <li><b className="text-red-700">Vermelho</b> e <b className="text-amber-700">amarelo</b>: terra com fome. Sem adubo, a lavoura rende menos.</li>
+              <li><b className="text-blue">Azul</b>: no limite. Adube para não perder produção.</li>
+              <li><b className="text-leaf">Verde</b>: no ponto. Só reponha o que a colheita tira.</li>
+              <li><b className="text-forest">Verde-escuro</b>: tem de sobra. Dá para economizar adubo.</li>
             </ul>
           </div>
 
@@ -152,8 +155,7 @@ function TabelaModal({
               <div className="leading-relaxed">{plantio?.nDetalhe}</div>
               <p className="mt-3 flex items-start gap-2 text-[13px] text-ink-soft">
                 <Info className="mt-0.5 size-3.5 shrink-0" />
-                A análise de solo não classifica o N. A dose é definida pela cultura, pela produtividade
-                esperada e pela cultura anterior.
+                O N não aparece na análise de solo: a dose depende da lavoura e de quanto você espera colher.
               </p>
             </div>
           </div>
@@ -161,8 +163,9 @@ function TabelaModal({
           <div>
             <p className="text-[14px] font-semibold">Umidade</p>
             <div className="mt-2 rounded-2xl p-4 text-[14px] leading-relaxed ring-1 ring-black/5">
-              Ideal entre <b>{plantio?.umidadeMin}% e 100%</b> da água disponível do solo. Abaixo de{" "}
-              <b>{plantio?.umidadeMin}%</b>, a planta começa a sofrer com a falta de água: é hora de irrigar.
+              Mantenha o medidor entre <b>{plantio?.umidadeMin}% e 70%</b>. Abaixo de{" "}
+              <b>{plantio?.umidadeMin}%</b>, a planta passa sede: hora de irrigar. Acima de <b>70%</b>, é água
+              demais: segure a irrigação.
             </div>
           </div>
 
@@ -178,6 +181,24 @@ function TabelaModal({
         </DialogFooter>
       </DialogContent>
     </Dialog>
+  );
+}
+
+/** Dá mais espaço ao "+" e ao "·" que separam as partes da dose de N. */
+function Dose({ texto }: { texto: string }) {
+  const partes = texto.split(/ ([+·]) /);
+  return (
+    <>
+      {partes.map((parte, i) =>
+        i % 2 === 1 ? (
+          <span key={i} className="mx-2 font-semibold text-ink-soft">
+            {parte}
+          </span>
+        ) : (
+          <span key={i}>{parte}</span>
+        ),
+      )}
+    </>
   );
 }
 
@@ -204,18 +225,18 @@ function Plantio({ dados, onVerTabela }: { dados: DadosPlantio; onVerTabela: (d:
           <p className={rotulo}>NPK ideal</p>
           <dl className="mt-2 grid grid-cols-[auto_1fr] gap-x-3 gap-y-1.5 text-[14px]">
             <dt className="font-semibold text-blue">N</dt>
-            <dd>{dados.nResumo}</dd>
+            <dd><Dose texto={dados.nResumo} /></dd>
             <dt className="font-semibold text-leaf">P</dt>
-            <dd>{dados.tabelaCafe ? "9,1–13,5" : "12,1–18,0"} mg/dm³ <span className="text-ink-soft">(argila 35–60%)</span></dd>
+            <dd>{dados.tabelaCafe ? "9,1 – 13,5" : "12,1 – 18,0"} mg/dm³ <span className="text-ink-soft">(argila 35 – 60%)</span></dd>
             <dt className="font-semibold text-forest">K</dt>
-            <dd>{dados.tabelaCafe ? "120–200" : "71–120"} mg/dm³</dd>
+            <dd>{dados.tabelaCafe ? "120 – 200" : "71 – 120"} mg/dm³</dd>
           </dl>
         </div>
         <div>
           <p className={rotulo}>Umidade ideal</p>
           <p className="mt-1.5 flex items-center gap-1.5 text-[14px]">
             <Droplets className="size-3.5 text-blue" />
-            {dados.umidadeMin}–100% da água disponível
+            {dados.umidadeMin} – 70% no medidor
           </p>
         </div>
       </div>
@@ -233,48 +254,48 @@ const soja: DadosPlantio = {
   nDetalhe: (
     <>Safra de verão: <b>sem adubação de N</b>, a inoculação com bactérias supre a planta. Cultivo de outono-inverno: <b>50 kg/ha</b>, 1/4 no plantio e o resto em cobertura antes do florescimento.</>
   ),
-  umidadeMin: 50,
+  umidadeMin: "52,5",
 };
 const milho: DadosPlantio = {
   nome: "Milho",
-  nResumo: "10–30 kg/ha no plantio + 10–140 kg/ha em cobertura",
+  nResumo: "10 – 30 kg/ha no plantio + 10 – 140 kg/ha em cobertura",
   nDetalhe: (
     <>Plantio: <b>10 a 30 kg/ha</b>. Cobertura: <b>10 a 140 kg/ha</b>, conforme a produtividade esperada e a cultura anterior (menos N depois de soja, pastagem ou adubo verde).</>
   ),
-  umidadeMin: 45,
+  umidadeMin: "51",
 };
 const cana: DadosPlantio = {
   nome: "Cana-de-açúcar",
-  nResumo: "Planta: 30 + 30–60 kg/ha · Soca: 60–120 kg/ha",
+  nResumo: "Planta: 30 + 30 – 60 kg/ha · Soca: 60 – 120 kg/ha",
   nDetalhe: (
     <>Cana-planta: <b>30 kg/ha</b> no plantio e <b>30 a 60 kg/ha</b> em cobertura. Cana-soca: <b>60 a 120 kg/ha</b>, conforme a produtividade esperada.</>
   ),
-  umidadeMin: 35,
+  umidadeMin: "47",
 };
 const cafe: DadosPlantio = {
   nome: "Café",
-  nResumo: "80–450 kg/ha/ano, conforme a produção",
+  nResumo: "80 – 450 kg/ha/ano, conforme a produção",
   nDetalhe: (
-    <>Lavoura em produção: <b>80 a 450 kg/ha por ano</b>, conforme a produtividade esperada e o N nas folhas. Exemplo: para 30–40 sacas/ha, <b>300 kg/ha</b> sem análise foliar ou <b>220 kg/ha</b> com o N das folhas adequado.</>
+    <>Lavoura em produção: <b>80 a 450 kg/ha por ano</b>, conforme a produtividade esperada e o N nas folhas. Exemplo: para 30 – 40 sacas/ha, <b>300 kg/ha</b> sem análise foliar ou <b>220 kg/ha</b> com o N das folhas adequado.</>
   ),
-  umidadeMin: 60,
+  umidadeMin: "56",
   tabelaCafe: true,
 };
 const algodao: DadosPlantio = {
   nome: "Algodão",
-  nResumo: "15–25 kg/ha no plantio + 70–150 kg/ha em cobertura",
+  nResumo: "15 – 25 kg/ha no plantio + 70 – 150 kg/ha em cobertura",
   nDetalhe: (
     <>Plantio: <b>15 a 25 kg/ha</b>. Cobertura: <b>70 a 150 kg/ha</b>, conforme a produtividade esperada. Exemplo: para 4.000 kg/ha de algodão em caroço, cerca de <b>120 kg/ha</b> no total. Depois de soja, use até 20% menos.</>
   ),
-  umidadeMin: 35,
+  umidadeMin: "47",
 };
 const feijao: DadosPlantio = {
   nome: "Feijão",
-  nResumo: "20–40 kg/ha no plantio + 20–60 kg/ha em cobertura",
+  nResumo: "20 – 40 kg/ha no plantio + 20 – 60 kg/ha em cobertura",
   nDetalhe: (
-    <>Plantio: <b>20 a 40 kg/ha</b>. Cobertura: <b>20 a 60 kg/ha</b>, aos 20–30 dias, conforme a produtividade esperada. Exemplo: para 1.200–2.500 kg/ha, de <b>50 a 70 kg/ha</b> no total.</>
+    <>Plantio: <b>20 a 40 kg/ha</b>. Cobertura: <b>20 a 60 kg/ha</b>, aos 20 – 30 dias, conforme a produtividade esperada. Exemplo: para 1.200 – 2.500 kg/ha, de <b>50 a 70 kg/ha</b> no total.</>
   ),
-  umidadeMin: 55,
+  umidadeMin: "54",
 };
 
 export function PlantiosView() {
